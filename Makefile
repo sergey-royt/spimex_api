@@ -1,0 +1,2 @@
+api:
+	python -m src
