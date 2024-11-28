@@ -8,8 +8,33 @@ packages = [{include = "app"}]
 
 [tool.poetry.dependencies]
 python = "^3.12"
+fastapi = {extras = ["standard"], version = "^0.115.5"}
+python-dotenv = "^1.0.1"
+pydantic-settings = "^2.6.1"
 
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.13.0"
+ruff = "^0.8.0"
+flake8 = "^7.1.1"
+pre-commit = "^4.0.1"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
+exclude = ['.venv/']
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_subclassing_any = false
+
+
+[tool.ruff]
+line-length = 79
+
