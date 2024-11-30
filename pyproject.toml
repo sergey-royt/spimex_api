@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["sergey-royt <goodstop687@gmail.com>"]
 readme = "README.md"
-packages = [{include = "app"}]
+packages = [{include = "src"}]
 
 [tool.poetry.dependencies]
 python = "^3.12"
@@ -12,6 +12,7 @@ fastapi = {extras = ["standard"], version = "^0.115.5"}
 python-dotenv = "^1.0.1"
 pydantic-settings = "^2.6.1"
 sqlalchemy = "^2.0.36"
+asyncpg = "^0.30.0"
 
 
 [tool.poetry.group.dev.dependencies]
