@@ -9,7 +9,7 @@ from src.schemas.trading_result import (
     TradeResultDB,
 )
 from src.api.v1.services.trade_services import get_dynamics
-from src.cache.decorator import redis_cache
+from src.cache.decorators import redis_cache
 
 dynamic_router = APIRouter(prefix="/dynamics")
 
@@ -28,6 +28,8 @@ async def dynamics(
     If end_date not provided it set to the current date
     Results can be filtered by: oil_id, delivery_basis_id, delivery_type_id
     Page and count of trades per page can be specified
+
+    Using cash if possible
     """
 
     if (

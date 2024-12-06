@@ -1,7 +1,7 @@
 import hashlib
-import logging
 from typing import Optional
 
+from loguru import logger
 from fastapi import BackgroundTasks
 import redis.asyncio as redis
 from redis.exceptions import ConnectionError
@@ -21,15 +21,15 @@ class RedisClient:
 
     async def connect(self) -> None:
         try:
+            logger.info("Connecting to Redis")
             self.client = await redis.from_url(self.url)
             await self.client.ping()
         except ConnectionError as e:
             self.client = None
-            logging.error(f"Ошибка при подключении к Redis: {e}")
+            logger.error(f"Error while connecting to Redis: {e}")
 
     async def close(self) -> None:
-        if self.client:
-            await self.client.close()
+        await self.client.close()
 
     async def get_cache(self, key: str) -> Optional[str]:
         """
@@ -39,8 +39,10 @@ class RedisClient:
 
         if self.client:
             key = self._hash_key(key)
+            logger.info(f"Searching for key: {key}")
             value = await self.client.get(key)
             return value
+        self.log_not_connected()
 
     async def set_cache(self, key: str, value: str) -> None:
         """
@@ -49,7 +51,12 @@ class RedisClient:
 
         if self.client:
             db_key = self._hash_key(key)
-            await self.client.set(db_key, value)
+            try:
+                await self.client.set(db_key, value)
+            finally:
+                logger.info(f"Value for key: {db_key} is set")
+        else:
+            self.log_not_connected()
 
     def set_in_background(
         self, background_tasks: BackgroundTasks, key: str, value: str
@@ -61,12 +68,18 @@ class RedisClient:
         background_tasks.add_task(self.set_cache, key, value)
 
     async def clear_cache(self) -> None:
-        if self.client:
+        try:
             await self.client.flushall()
+        finally:
+            logger.info("Cache cleared")
 
     @staticmethod
     def _hash_key(key: str) -> str:
         return hashlib.sha256(key.encode()).hexdigest()
+
+    @staticmethod
+    def log_not_connected() -> None:
+        logger.warning("Can't using cache. Not connected to Redis")
 
 
 redis_client = RedisClient(url=settings.REDIS_URL)

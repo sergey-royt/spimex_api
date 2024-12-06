@@ -9,7 +9,7 @@ from src.database.db import get_async_session
 from src.api.v1.services.trade_services import get_last_trading_dates
 from src.schemas.trading_date import TradingDatesResponse
 from src.schemas.trading_date import TradingDateFilter
-from src.cache.decorator import redis_cache
+from src.cache.decorators import redis_cache
 
 
 dates_router = APIRouter(prefix="/last_trading_dates")
@@ -27,6 +27,8 @@ async def last_trading_dates(
     Return last trading dates (descending order)
     The count of dates can be specified
     By default it would be 10
+
+    Using cash if possible
     """
 
     result: Sequence[date] = await get_last_trading_dates(

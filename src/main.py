@@ -1,8 +1,8 @@
-import logging
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
 from fastapi import FastAPI
+from loguru import logger
 
 from src.api.v1.handlers.last_trading_dates import dates_router
 from src.api.v1.handlers.dynamics import dynamic_router
@@ -13,13 +13,13 @@ from src.tasks.scheduler import start_scheduler
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    logging.info("Application start")
+    logger.info("Application start")
     await redis_client.connect()
     start_scheduler()
     yield
     await redis_client.clear_cache()
     await redis_client.close()
-    logging.info("Application stop")
+    logger.info("Application stop")
 
 
 def create_app() -> FastAPI:
