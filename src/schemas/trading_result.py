@@ -3,13 +3,15 @@ from datetime import date, datetime
 from typing import Optional
 
 from fastapi import Query
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 from src.schemas.filter import BaseFilter
 from src.schemas.response import BaseResponse
 
 
 class TradeResultDB(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     exchange_product_id: str = Field(max_length=11)
     exchange_product_name: str = Field(max_length=200)

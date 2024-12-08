@@ -79,7 +79,7 @@ async def get_dynamics(
 
     result = await session.execute(query)
     trades = result.scalars().all()
-    return [trade.to_pydantic_schema() for trade in trades]
+    return [TradeResultDB.from_orm(trade) for trade in trades]
 
 
 async def get_trading_results(
@@ -128,4 +128,4 @@ async def get_trading_results(
 
     result = await session.execute(query)
     trades = result.scalars().all()
-    return [trade.to_pydantic_schema() for trade in trades]
+    return [TradeResultDB.from_orm(trade) for trade in trades]
