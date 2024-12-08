@@ -1,7 +1,9 @@
-from pydantic import BaseModel
+from typing import Annotated
+
+from pydantic import BaseModel, Field
 from starlette.status import HTTP_200_OK
 
 
 class BaseResponse(BaseModel):
-    status: int = HTTP_200_OK
-    error: bool = False
+    status: Annotated[int, Field(default=HTTP_200_OK)]
+    error: Annotated[bool, Field(default=False)]
