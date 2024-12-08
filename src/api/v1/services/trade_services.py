@@ -79,7 +79,10 @@ async def get_dynamics(
 
     result = await session.execute(query)
     trades = result.scalars().all()
-    return [TradeResultDB.model_validate(trade) for trade in trades]
+    return [
+        TradeResultDB.model_validate(trade, from_attributes=True)
+        for trade in trades
+    ]
 
 
 async def get_trading_results(
@@ -128,4 +131,7 @@ async def get_trading_results(
 
     result = await session.execute(query)
     trades = result.scalars().all()
-    return [TradeResultDB.model_validate(trade) for trade in trades]
+    return [
+        TradeResultDB.model_validate(trade, from_attributes=True)
+        for trade in trades
+    ]
