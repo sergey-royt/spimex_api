@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, Request, BackgroundTasks, HTTPException
-from pydantic import TypeAdapter
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database.db import get_async_session
@@ -15,7 +14,7 @@ dynamic_router = APIRouter(prefix="/dynamics")
 
 
 @dynamic_router.get("/")
-@redis_cache(type_adapter=TypeAdapter(TradeResultResponse))
+@redis_cache(data_model=TradeResultResponse)
 async def dynamics(
     request: Request,
     background_tasks: BackgroundTasks,

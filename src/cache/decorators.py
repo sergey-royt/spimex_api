@@ -1,7 +1,7 @@
 from functools import wraps
 
 from fastapi import Request, BackgroundTasks
-from pydantic import TypeAdapter
+from pydantic import BaseModel
 
 from .redis_client import redis_client
 
@@ -10,7 +10,7 @@ def request_to_key(request: Request):
     return f"{request.method}:{request.url}"
 
 
-def redis_cache(type_adapter: TypeAdapter):
+def redis_cache(data_model: BaseModel):
     """
     Decorator for endpoints which allows to use redis cache
 
@@ -34,12 +34,12 @@ def redis_cache(type_adapter: TypeAdapter):
             key = request_to_key(request)
             cache = await redis_client.get_cache(key=key)
             if cache:
-                return type_adapter.validate_json(cache)
+                return data_model.model_validate_json(cache)
             result = await func(request, background_tasks, *args, **kwargs)
             redis_client.set_in_background(
                 background_tasks,
                 key=key,
-                value=type_adapter.dump_json(result).decode("utf-8"),
+                value=result.model_dump_json(),
             )
             return result
 

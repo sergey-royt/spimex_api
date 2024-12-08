@@ -2,7 +2,6 @@ from datetime import date
 from typing import Sequence
 
 from fastapi import APIRouter, Depends, Request, BackgroundTasks
-from pydantic import TypeAdapter
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.database.db import get_async_session
@@ -16,7 +15,7 @@ dates_router = APIRouter(prefix="/last_trading_dates")
 
 
 @dates_router.get("/")
-@redis_cache(type_adapter=TypeAdapter(TradingDatesResponse))
+@redis_cache(data_model=TradingDatesResponse)
 async def last_trading_dates(
     request: Request,
     background_tasks: BackgroundTasks,

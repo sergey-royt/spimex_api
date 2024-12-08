@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends, BackgroundTasks, Request
 from sqlalchemy.ext.asyncio import AsyncSession
-from pydantic import TypeAdapter
 
 from src.cache.decorators import redis_cache
 from src.database.db import get_async_session
@@ -16,7 +15,7 @@ trade_router = APIRouter(prefix="/trading_results")
 
 
 @trade_router.get("/")
-@redis_cache(type_adapter=TypeAdapter(TradeResultResponse))
+@redis_cache(data_model=TradeResultResponse)
 async def trading_results(
     request: Request,
     background_tasks: BackgroundTasks,
