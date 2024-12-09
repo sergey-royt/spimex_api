@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request, BackgroundTasks, HTTPException
+from starlette.status import HTTP_200_OK
 
 from src.schemas.trading_result import (
     TradeResultDynamicFilter,
@@ -15,7 +16,7 @@ from src.utils.custom_types import AsyncSessionDep
 dynamic_router = APIRouter(prefix="/dynamics")
 
 
-@dynamic_router.get("/")
+@dynamic_router.get("/", status_code=HTTP_200_OK)
 @redis_cache(data_model=TradeResultResponse)
 async def dynamics(
     request: Request,

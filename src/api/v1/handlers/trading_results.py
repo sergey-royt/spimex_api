@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, BackgroundTasks, Request
+from starlette.status import HTTP_200_OK
 
 from src.cache.decorators import redis_cache
 from src.schemas.trading_result import (
@@ -15,7 +16,7 @@ from src.utils.custom_types import AsyncSessionDep
 trade_router = APIRouter(prefix="/trading_results")
 
 
-@trade_router.get("/")
+@trade_router.get("/", status_code=HTTP_200_OK)
 @redis_cache(data_model=TradeResultResponse)
 async def trading_results(
     request: Request,

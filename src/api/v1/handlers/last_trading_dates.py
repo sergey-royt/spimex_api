@@ -2,6 +2,7 @@ from datetime import date
 from typing import Sequence, Annotated
 
 from fastapi import APIRouter, Depends, Request, BackgroundTasks
+from starlette.status import HTTP_200_OK
 
 from src.api.v1.services.trade_services import get_last_trading_dates
 from src.schemas.trading_date import TradingDatesResponse
@@ -13,7 +14,7 @@ from src.utils.custom_types import AsyncSessionDep
 dates_router = APIRouter(prefix="/last_trading_dates")
 
 
-@dates_router.get("/")
+@dates_router.get("/", status_code=HTTP_200_OK)
 @redis_cache(data_model=TradingDatesResponse)
 async def last_trading_dates(
     request: Request,
