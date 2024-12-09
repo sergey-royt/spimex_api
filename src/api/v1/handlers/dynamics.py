@@ -21,9 +21,7 @@ async def dynamics(
     request: Request,
     background_tasks: BackgroundTasks,
     session: AsyncSessionDep,
-    filters: Annotated[
-        TradeResultDynamicFilter, Depends(TradeResultDynamicFilter)
-    ],
+    filters: Annotated[TradeResultDynamicFilter, Depends()],
 ) -> TradeResultResponse:
     """
     Return trade results for given period (descending order)

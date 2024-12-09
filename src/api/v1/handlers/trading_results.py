@@ -21,7 +21,7 @@ async def trading_results(
     request: Request,
     background_tasks: BackgroundTasks,
     session: AsyncSessionDep,
-    filters: Annotated[BaseTradeResultFilter, Depends(BaseTradeResultFilter)],
+    filters: Annotated[BaseTradeResultFilter, Depends()],
 ) -> TradeResultResponse:
     """
     Return last trade results (descending order)

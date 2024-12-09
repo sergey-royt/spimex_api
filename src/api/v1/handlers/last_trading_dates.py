@@ -19,7 +19,7 @@ async def last_trading_dates(
     request: Request,
     background_tasks: BackgroundTasks,
     session: AsyncSessionDep,
-    filters: Annotated[TradingDateFilter, Depends(TradingDateFilter)],
+    filters: Annotated[TradingDateFilter, Depends()],
 ) -> TradingDatesResponse:
     """
     Return last trading dates (descending order)
