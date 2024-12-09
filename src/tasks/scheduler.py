@@ -4,7 +4,7 @@ from src.cache.redis_client import redis_client
 
 
 async def clear_redis_cache() -> None:
-    if redis_client.redis:
+    if redis_client.client:
         await redis_client.clear_cache()
 
 

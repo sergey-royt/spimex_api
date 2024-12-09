@@ -1,4 +1,6 @@
 from functools import wraps
+from typing import Type
+from collections.abc import Callable
 
 from fastapi import Request, BackgroundTasks
 from pydantic import BaseModel
@@ -6,11 +8,11 @@ from pydantic import BaseModel
 from .redis_client import redis_client
 
 
-def request_to_key(request: Request):
+def request_to_key(request: Request) -> str:
     return f"{request.method}:{request.url}"
 
 
-def redis_cache(data_model: BaseModel):
+def redis_cache(data_model: Type[BaseModel]) -> Callable:
     """
     Decorator for endpoints which allows to use redis cache
 
@@ -23,14 +25,14 @@ def redis_cache(data_model: BaseModel):
     background tasks
     """
 
-    def actual_decorator(func):
+    def actual_decorator(func) -> Callable:
         @wraps(func)
         async def wrapper(
             request: Request,
             background_tasks: BackgroundTasks,
             *args,
             **kwargs,
-        ):
+        ) -> BaseModel:
             key = request_to_key(request)
             cache = await redis_client.get_cache(key=key)
             if cache:

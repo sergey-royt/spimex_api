@@ -17,7 +17,7 @@ class RedisClient:
 
     def __init__(self, url: str):
         self.url = url
-        self.client = None
+        self.client: Optional[redis.Redis[str]] = None
 
     async def connect(self) -> None:
         try:
@@ -29,7 +29,8 @@ class RedisClient:
             logger.error(f"Error while connecting to Redis: {e}")
 
     async def close(self) -> None:
-        await self.client.close()
+        if self.client:
+            await self.client.close()
 
     async def get_cache(self, key: str) -> Optional[str]:
         """
@@ -42,7 +43,9 @@ class RedisClient:
             logger.info(f"Searching for key: {key}")
             value = await self.client.get(key)
             return value
-        self.log_not_connected()
+        else:
+            self.log_not_connected()
+            return None
 
     async def set_cache(self, key: str, value: str) -> None:
         """
@@ -68,10 +71,12 @@ class RedisClient:
         background_tasks.add_task(self.set_cache, key, value)
 
     async def clear_cache(self) -> None:
-        try:
-            await self.client.flushall()
-        finally:
-            logger.info("Cache cleared")
+        if self.client:
+            try:
+                await self.client.flushall()
+            finally:
+                logger.info("Cache cleared")
+        return None
 
     @staticmethod
     def _hash_key(key: str) -> str:
