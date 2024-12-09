@@ -17,7 +17,7 @@ def redis_cache(data_model: BaseModel):
     Generate key from request using it
 
     Look for value in cache if it exists
-    encode it according given TypeAdapter.
+    convert it to given data_model.
 
     If not, call endpoint and save result in cache using
     background tasks

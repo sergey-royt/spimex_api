@@ -1,14 +1,15 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, BackgroundTasks, Request
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.cache.decorators import redis_cache
-from src.database.db import get_async_session
 from src.schemas.trading_result import (
     BaseTradeResultFilter,
     TradeResultResponse,
     TradeResultDB,
 )
 from src.api.v1.services.trade_services import get_trading_results
+from src.utils.custom_types import AsyncSessionDep
 
 
 trade_router = APIRouter(prefix="/trading_results")
@@ -19,8 +20,8 @@ trade_router = APIRouter(prefix="/trading_results")
 async def trading_results(
     request: Request,
     background_tasks: BackgroundTasks,
-    session: AsyncSession = Depends(get_async_session),
-    filters: BaseTradeResultFilter = Depends(BaseTradeResultFilter),
+    session: AsyncSessionDep,
+    filters: Annotated[BaseTradeResultFilter, Depends(BaseTradeResultFilter)],
 ) -> TradeResultResponse:
     """
     Return last trade results (descending order)

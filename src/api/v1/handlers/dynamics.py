@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, Request, BackgroundTasks, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Annotated
 
-from src.database.db import get_async_session
+from fastapi import APIRouter, Depends, Request, BackgroundTasks, HTTPException
+
 from src.schemas.trading_result import (
     TradeResultDynamicFilter,
     TradeResultResponse,
@@ -9,6 +9,8 @@ from src.schemas.trading_result import (
 )
 from src.api.v1.services.trade_services import get_dynamics
 from src.cache.decorators import redis_cache
+from src.utils.custom_types import AsyncSessionDep
+
 
 dynamic_router = APIRouter(prefix="/dynamics")
 
@@ -18,8 +20,10 @@ dynamic_router = APIRouter(prefix="/dynamics")
 async def dynamics(
     request: Request,
     background_tasks: BackgroundTasks,
-    session: AsyncSession = Depends(get_async_session),
-    filters: TradeResultDynamicFilter = Depends(TradeResultDynamicFilter),
+    session: AsyncSessionDep,
+    filters: Annotated[
+        TradeResultDynamicFilter, Depends(TradeResultDynamicFilter)
+    ],
 ) -> TradeResultResponse:
     """
     Return trade results for given period (descending order)
