@@ -1,13 +1,12 @@
-from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Annotated
 
 from fastapi import Query
+from pydantic import BaseModel
 
 
-@dataclass
-class BaseFilter:
-    page: Optional[int] = Query(default=None)
-    per_page: int = Query(ge=1, le=100, default=100)
+class BaseFilter(BaseModel):
+    page: Annotated[int, Query(ge=1, default=1)]
+    per_page: Annotated[int, Query(ge=1, le=100, default=100)]
 
     @property
     def offset(self) -> int:

@@ -1,9 +1,9 @@
-from dataclasses import dataclass
+from typing_extensions import Self
 from datetime import date, datetime
 from typing import Optional, Annotated
 
-from fastapi import Query
-from pydantic import BaseModel, Field
+from fastapi import Query, HTTPException
+from pydantic import BaseModel, Field, model_validator
 
 from src.schemas.filter import BaseFilter
 from src.schemas.response import BaseResponse
@@ -25,17 +25,28 @@ class TradeResultDB(BaseModel):
     updated_on: datetime
 
 
-@dataclass
 class BaseTradeResultFilter(BaseFilter):
-    oil_id: Optional[str] = Query(None)
-    delivery_type_id: Optional[str] = Query(None)
-    delivery_basis_id: Optional[str] = Query(None)
+    oil_id: Annotated[Optional[str], Query(None)]
+    delivery_type_id: Annotated[Optional[str], Query(None)]
+    delivery_basis_id: Annotated[Optional[str], Query(None)]
 
 
-@dataclass
 class TradeResultDynamicFilter(BaseTradeResultFilter):
-    start_date: Optional[date] = Query(None)
-    end_date: Optional[date] = Query(None)
+    start_date: Annotated[Optional[date], Query(None)]
+    end_date: Annotated[Optional[date], Query(None)]
+
+    @classmethod
+    @model_validator(mode="before")
+    def validate_date(cls, data) -> Self:
+        if (
+            data.get("start_date")
+            and data.get("end_date")
+            and data.get("start_date") >= data.get("end_date")
+        ):
+            raise HTTPException(
+                status_code=400, detail="start_date must be less than end_date"
+            )
+        return data
 
 
 class TradeResultResponse(BaseResponse):
