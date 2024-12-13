@@ -1,5 +1,5 @@
 from typing_extensions import Self
-from datetime import date, datetime
+from datetime import date
 from typing import Optional, Annotated
 
 from fastapi import Query, HTTPException
@@ -10,7 +10,6 @@ from src.schemas.response import BaseResponse
 
 
 class TradeResultDB(BaseModel):
-    id: int
     exchange_product_id: Annotated[str, Field(max_length=11)]
     exchange_product_name: Annotated[str, Field(max_length=200)]
     delivery_basis_name: Annotated[str, Field(max_length=50)]
@@ -21,8 +20,6 @@ class TradeResultDB(BaseModel):
     oil_id: Annotated[str, Field(max_length=4)]
     delivery_basis_id: Annotated[str, Field(max_length=3)]
     delivery_type_id: Annotated[str, Field(max_length=2)]
-    created_on: datetime
-    updated_on: datetime
 
 
 class BaseTradeResultFilter(BaseFilter):

@@ -1,5 +1,5 @@
 .idea/
 .mypy_cache/
-.env
+*.env
 *.pyc
 logs.json
