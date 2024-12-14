@@ -10,11 +10,4 @@ def prepare_payload(
     payload = response.json().get("payload")
     if payload is None:
         return {}
-
-    if exclude is None:
-        return payload
-
-    for key in exclude:
-        payload.pop(key, None)
-
     return payload

@@ -1,4 +1,4 @@
-from typing import Optional, Annotated
+from typing import Annotated
 
 from fastapi import Query
 from pydantic import BaseModel
@@ -10,8 +10,8 @@ class BaseFilter(BaseModel):
 
     @property
     def offset(self) -> int:
-        return self.page * self.per_page if self.page else 0
+        return (self.page - 1) * self.per_page
 
     @property
-    def limit(self) -> Optional[int]:
-        return self.per_page if self.page is not None else None
+    def limit(self) -> int:
+        return self.per_page

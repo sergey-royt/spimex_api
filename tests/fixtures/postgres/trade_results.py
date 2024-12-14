@@ -2,7 +2,6 @@ from datetime import date
 
 TRADE_RESULTS = [
     {
-        "id": 65324,
         "exchange_product_id": "A10KZLY060W",
         "exchange_product_name": "Бензин (АИ-100-К5)-Евро, ст. Злынка-Экспорт (промежуточная станция)",
         "delivery_basis_name": "ст. Злынка-Экспорт",

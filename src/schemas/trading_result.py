@@ -4,6 +4,7 @@ from typing import Optional, Annotated
 
 from fastapi import Query, HTTPException
 from pydantic import BaseModel, Field, model_validator
+from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 
 from src.schemas.filter import BaseFilter
 from src.schemas.response import BaseResponse
@@ -32,8 +33,8 @@ class TradeResultDynamicFilter(BaseTradeResultFilter):
     start_date: Annotated[Optional[date], Query(None)]
     end_date: Annotated[Optional[date], Query(None)]
 
-    @classmethod
     @model_validator(mode="before")
+    @classmethod
     def validate_date(cls, data) -> Self:
         if (
             data.get("start_date")
@@ -41,7 +42,8 @@ class TradeResultDynamicFilter(BaseTradeResultFilter):
             and data.get("start_date") >= data.get("end_date")
         ):
             raise HTTPException(
-                status_code=400, detail="start_date must be less than end_date"
+                status_code=HTTP_422_UNPROCESSABLE_ENTITY,
+                detail="Start_date must be less than end_date",
             )
         return data
 

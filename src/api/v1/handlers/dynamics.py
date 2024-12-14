@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Request, BackgroundTasks, HTTPException
+from fastapi import APIRouter, Depends, Request, BackgroundTasks
 from starlette.status import HTTP_200_OK
 
 from src.schemas.trading_result import (
@@ -33,15 +33,6 @@ async def dynamics(
 
     Using cash if possible
     """
-
-    if (
-        filters.start_date
-        and filters.end_date
-        and filters.start_date >= filters.end_date
-    ):
-        raise HTTPException(
-            status_code=400, detail="start_date must be less than end_date"
-        )
 
     result: list[TradeResultDB] = await get_dynamics(
         session=session,

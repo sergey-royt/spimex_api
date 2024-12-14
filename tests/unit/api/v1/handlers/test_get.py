@@ -7,7 +7,7 @@ from tests.fixtures import test_cases
 from tests.utils import prepare_payload
 
 
-class TestLastTradingDates:
+class TestGet:
     @staticmethod
     @pytest.mark.asyncio(loop_scope="module")
     @pytest.mark.parametrize(
@@ -18,9 +18,13 @@ class TestLastTradingDates:
             "expected_payload",
             "expectation",
         ),
-        test_cases.TEST_LAST_TRADING_DATES_PARAMS,
+        [
+            *test_cases.TEST_LAST_TRADING_DATES_PARAMS,
+            *test_cases.TEST_DYNAMICS_PARAMS,
+            *test_cases.TEST_TRADING_RESULTS,
+        ],
     )
-    async def test_last_trading_dates(
+    async def test_get(
         url: str,
         params: dict[str, str],
         expected_status_code: int,
